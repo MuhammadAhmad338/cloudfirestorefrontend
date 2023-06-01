@@ -8,7 +8,7 @@ class DogModel {
   final String name;
   final String type;
 
-  DogModel( 
+  DogModel(
       {required this.id,
       required this.lifeExpectancy,
       required this.origin,
@@ -37,5 +37,6 @@ class DogModel {
 
   String toJson() => json.encode(toMap());
 
-  factory DogModel.fromJson(String source) => DogModel.fromMap(json.decode(source) as Map<String, dynamic>);
+  factory DogModel.fromJson(String source) =>
+      DogModel.fromMap(json.decode(source) as Map<String, dynamic>);
 }

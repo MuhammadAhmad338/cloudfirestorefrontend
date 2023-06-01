@@ -16,9 +16,7 @@ class HomeView extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text("Google Cloud",
-         style: TextStyle(
-          fontWeight: FontWeight.bold
-        )),
+            style: TextStyle(fontWeight: FontWeight.bold)),
         centerTitle: true,
       ),
       body: SafeArea(
@@ -58,18 +56,23 @@ class HomeView extends StatelessWidget {
                 child: const Text("Get Data")),
             TextButton(
               onPressed: () {
-              DataServices.addDogs(DogModel(
-                id: 11,
-                lifeExpectancy: 12,
-                origin: "asd", 
-                name: "Asdasd", 
-                type: "asdasd"));
+                DataServices.addDogs(DogModel(
+                    id: 11,
+                    lifeExpectancy: 12,
+                    origin: "asd",
+                    name: "Asdasd",
+                    type: "asdasd"));
               },
               child: const Text("Post Data"),
             ),
             TextButton(
                 onPressed: () {
                   DataServices.getSingleDog("dalmatian");
+                },
+                child: const Text("Get Data")),
+                 TextButton(
+                onPressed: () {
+                  DataServices.gotAllDogs();
                 },
                 child: const Text("Get Data")),
           ],
