@@ -23,6 +23,10 @@ class _DogDataState extends State<DogData> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+          elevation: 1,
+        backgroundColor: const Color.fromARGB(255, 248, 228, 191),
+      ),
       body: SafeArea(
         child: FutureBuilder(
             future: _dogData,
@@ -38,7 +42,7 @@ class _DogDataState extends State<DogData> {
                   subtitle: Text(dogData.type),
                   trailing: IconButton(
                       onPressed: () {
-                        DataServices().deleteDogData(dogData.id);
+                        DataServices.deleteDogData(dogData.id);
                       },
                       icon: const Icon(Icons.delete)),
                 )));

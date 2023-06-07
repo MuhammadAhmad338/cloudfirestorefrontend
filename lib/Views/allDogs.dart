@@ -1,8 +1,7 @@
 // ignore: file_names
 import 'package:flutter/material.dart';
-import 'package:googlecloud/Models/dogModel.dart';
 import 'package:googlecloud/Services/dataServices.dart';
-import 'package:provider/provider.dart';
+import 'package:googlecloud/Views/homeView.dart';
 
 class AllDogs extends StatefulWidget {
   const AllDogs({super.key});
@@ -12,60 +11,96 @@ class AllDogs extends StatefulWidget {
 }
 
 class _AllDogsState extends State<AllDogs> {
-  late Future<List<DogModel>?> _listOfDogs;
-
-  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-    _listOfDogs = DataServices.gotAllDogs();
-  }
-
   @override
   Widget build(BuildContext context) {
+   
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.blueAccent,
+        elevation: 1,
+        backgroundColor: const Color.fromARGB(255, 248, 228, 191),
         title: const Text(
           "All Dogs",
           style: TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
         ),
+        actions: [
+          IconButton(
+            onPressed: () {
+              Navigator.of(context)
+                  .push(MaterialPageRoute(builder: (_) => const HomeView()));
+            },
+            icon: const Icon(Icons.add),
+          )
+        ],
         centerTitle: true,
       ),
-      body: SafeArea(
-        child: FutureBuilder(
-            future: _listOfDogs,
-            builder: (context, snapshot) {
-              var dogs = snapshot.data;
-              if (snapshot.hasError) {
-                return Center(
-                    child: Text(
-                        "Some error occured ${snapshot.error.toString()}"));
-              } else if (snapshot.hasData) {
-                return ListView.builder(
-                    itemCount: dogs!.length,
-                    itemBuilder: (context, index) {
-                      var dog = dogs[index];
-                      return Card(
-                        child: ListTile(
-                          title: Text(dog.name),
-                          subtitle: Text(dog.origin),
-                          trailing: Text(dog.lifeExpectancy.toString()),
-                          onTap: () {
-                            DataServices().deleteDogData(dog.id);
-                          },
+      drawer: Drawer(
+        backgroundColor: const Color.fromARGB(255, 248, 228, 191),
+        child: ListView(
+          children: [
+            const DrawerHeader(
+              child: Text('Drawer Header'),
+            ),
+            ListTile(
+              title: const Text('Home'),
+              onTap: () {
+                Navigator.pop(context);
+              },
+            ),
+            ListTile(
+              title: const Text('About'),
+              onTap: () {
+                Navigator.pushNamed(context, '/about');
+              },
+            ),
+            ListTile(
+              title: const Text(
+                'LogOut',
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ),
+              onTap: () {
+                DataServices.signOut();
+              },
+            ),
+          ],
+        ),
+      ),
+      body:SafeArea(
+              child: FutureBuilder(
+                  future: DataServices.gotAllDogs(),
+                  builder: (context, snapshot) {
+                    var dogs = snapshot.data;
+                    if (snapshot.hasError) {
+                      return Center(
+                          child: Text(
+                              "Some error occured ${snapshot.error.toString()}"));
+                    } else if (snapshot.data!.isEmpty) {
+                      return const Center(child: Text("List is Empty!"));
+                    } else if (snapshot.hasData) {
+                      return ListView.builder(
+                          itemCount: dogs!.length,
+                          itemBuilder: (context, index) {
+                            var dog = dogs[index];
+                            return Card(
+                              child: ListTile(
+                                title: Text(dog.name),
+                                subtitle: Text(dog.origin),
+                                trailing: Text(dog.lifeExpectancy.toString()),
+                                onTap: () {
+                                  DataServices.deleteDogData(dog.id);
+                                  setState(() {});
+                                },
+                              ),
+                            );
+                          });
+                    } else {
+                      return const Center(
+                        child: CircularProgressIndicator(
+                          color: Colors.blue,
                         ),
                       );
-                    });
-              } else {
-                return const Center(
-                  child: CircularProgressIndicator(
-                    color: Colors.blue,
-                  ),
-                );
-              }
-            }),
-      ),
+                    }
+                  }),
+            ),
     );
   }
 }
