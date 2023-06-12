@@ -1,10 +1,12 @@
+// ignore_for_file: file_names
 import 'package:flutter/material.dart';
 import 'package:googlecloud/Models/userModel.dart';
 import 'package:googlecloud/Services/dataServices.dart';
 import 'package:googlecloud/Views/signInScreen.dart';
 
 class SignUpScreen extends StatefulWidget {
-  const SignUpScreen({super.key});
+  final String? token;
+  const SignUpScreen({super.key,  this.token});
 
   @override
   State<SignUpScreen> createState() => _SignUpScreenState();
@@ -107,7 +109,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
                       if (usernameController.text.isNotEmpty &&
                           emailController.text.isNotEmpty &&
                           passwordController.text.isNotEmpty) {
-
                         showDialog(
                             context: context,
                             builder: (context) {
@@ -118,16 +119,17 @@ class _SignUpScreenState extends State<SignUpScreen> {
                               );
                             });
 
-                        usernameController.clear();
-                        emailController.clear();
-                        passwordController.clear();
-
                         DataServices().createUser(
                             UserModel(
                                 username: usernameController.text,
                                 email: emailController.text,
                                 password: passwordController.text),
+                                widget.token,
                             context);
+
+                        usernameController.clear();
+                        emailController.clear();
+                        passwordController.clear();
 
                         Navigator.of(context).pop();
                       }
@@ -138,7 +140,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
               GestureDetector(
                 onTap: () {
                   Navigator.of(context).push(
-                      MaterialPageRoute(builder: (_) => const SignInScreen()));
+                      MaterialPageRoute(builder: (_) =>  SignInScreen(token: widget.token,)));
                 },
                 child: Text("Already have an account | SignIn?",
                     style: TextStyle(

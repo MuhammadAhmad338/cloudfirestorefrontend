@@ -141,12 +141,14 @@ class _HomeViewState extends State<HomeView> {
                     _controller1.text.isNotEmpty &&
                     _controller2.text.isNotEmpty &&
                     _controller3.text.isNotEmpty) {
+
                   DataServices.addDogs(DogModel(
                       id: int.parse(_controller.text),
                       lifeExpectancy: int.parse(_controller0.text),
                       origin: _controller1.text,
                       name: _controller2.text,
                       type: _controller3.text));
+                      
                   setState(() {});
                 }
                 _controller.clear();
@@ -171,7 +173,7 @@ class _HomeViewState extends State<HomeView> {
                   TextButton(
                 onPressed: () {
                   DataServices.signOut();
-                  Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (_) => const SignUpScreen()), (route) => false);
+                  Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (_) =>  const SignUpScreen()), (route) => false);
                 },
                 child: const Text("Sign Out")),
           ],

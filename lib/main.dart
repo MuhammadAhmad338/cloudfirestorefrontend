@@ -1,5 +1,6 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:googlecloud/Services/cloudsqlServices.dart';
 import 'package:googlecloud/Services/dataServices.dart';
 import 'package:googlecloud/Views/allDogs.dart';
 import 'package:googlecloud/Views/signUpScreen.dart';
@@ -13,7 +14,10 @@ void main() async {
     options: DefaultFirebaseOptions.currentPlatform,
   );
   runApp(MultiProvider(
-    providers: [ChangeNotifierProvider(create: (_) => DataServices())],
+    providers: [
+      ChangeNotifierProvider(create: (_) => DataServices()),
+      ChangeNotifierProvider(create: (_) => CloudsqlServices())
+      ],
     child: const MyApp(),
   ));
 }
@@ -34,6 +38,7 @@ class _MyAppState extends State<MyApp> {
     setState(() {
       signedToken = prefs.getString('token');
     });
+    print(signedToken);
   }
 
   @override
@@ -53,6 +58,6 @@ class _MyAppState extends State<MyApp> {
             scaffoldBackgroundColor: const Color.fromARGB(255, 248, 228, 191),
             colorScheme: ColorScheme.fromSeed(seedColor: Colors.black),
             useMaterial3: true),
-        home: signedToken == null ? const SignUpScreen() : const AllDogs());
+        home: signedToken == null ? SignUpScreen(token: signedToken,) :  AllDogs(token: signedToken));
   }
 }

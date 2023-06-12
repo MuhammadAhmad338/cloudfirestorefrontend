@@ -3,10 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:googlecloud/Models/userModel.dart';
 import 'package:googlecloud/Services/dataServices.dart';
 
-import 'homeView.dart';
-
 class SignInScreen extends StatefulWidget {
-  const SignInScreen({super.key});
+  final String? token;
+  const SignInScreen({super.key, this.token});
 
   @override
   State<SignInScreen> createState() => _SignScreenState();
@@ -98,6 +97,7 @@ class _SignScreenState extends State<SignInScreen> {
                               UserModel(
                                   username: usernameController.text,
                                   password: passwordController.text),
+                                    widget.token,
                               context);
 
                           usernameController.clear();

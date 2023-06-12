@@ -1,17 +1,16 @@
-// ignore_for_file: file_names, avoid_print, no_leading_underscores_for_local_identifiers
+// ignore_for_file: file_names, avoid_print, no_leading_underscores_for_local_identifiers, unnecessary_brace_in_string_interps
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:googlecloud/Models/dogModel.dart';
 import 'package:googlecloud/Views/allDogs.dart';
-import 'package:googlecloud/Views/homeView.dart';
 import 'package:http/http.dart' as http;
 import '../Models/userModel.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class DataServices extends ChangeNotifier {
-    bool _isSigningIn = false;
-    bool get signIn => _isSigningIn;
-   set isSigningIn(bool value) {
+  bool _isSigningIn = false;
+  bool get signIn => _isSigningIn;
+  set isSigningIn(bool value) {
     _isSigningIn = value;
     notifyListeners();
   }
@@ -72,29 +71,37 @@ class DataServices extends ChangeNotifier {
     return null;
   }
 
-  Future<void> createUser(UserModel userdata, BuildContext context) async {
+  Future<void> createUser(
+      UserModel userdata, String? token, BuildContext context) async {
     var response = await http.post(
         Uri.parse("https://webappoo9.onrender.com/signUp"),
         headers: <String, String>{"Content-Type": "application/json"},
         body: userdata.toJson());
+    print(response);
     if (response.statusCode == 200) {
       var responseObject = jsonDecode(response.body);
+      print(responseObject);
       SharedPreferences _sharedPreferences =
           await SharedPreferences.getInstance();
       _sharedPreferences.setString("token", responseObject["token"]);
 
       print("UserData posted successfully! ${response}");
-      Navigator.of(context).push(MaterialPageRoute(builder: (context) => const AllDogs()));
+      Navigator.of(context).push(MaterialPageRoute(
+          builder: (context) => AllDogs(
+                token: token,
+              )));
     } else {
       print("Request failed with status!");
     }
   }
 
-  Future<void> signInUser(UserModel userdata, BuildContext context) async {
+  Future<void> signInUser(
+      UserModel userdata, String? token, BuildContext context) async {
     var response = await http.post(
         Uri.parse("https://webappoo9.onrender.com/signIn"),
         headers: <String, String>{"Content-Type": "application/json"},
         body: userdata.toJson());
+    print(response);
     if (response.statusCode == 200) {
       var responseObject = jsonDecode(response.body);
 
@@ -102,10 +109,28 @@ class DataServices extends ChangeNotifier {
           await SharedPreferences.getInstance();
       _sharedPreferences.setString("token", responseObject["token"]);
       print("UserData posted successfully!");
-      Navigator.of(context).push(MaterialPageRoute(builder: (context) => const AllDogs()));
+      Navigator.of(context).push(MaterialPageRoute(
+          builder: (context) => AllDogs(
+                token: token,
+              )));
     } else {
       print("Request failed with status!");
     }
+  }
+
+  Future<UserModel?> myUsers(String? token) async {
+    var response = await http
+        .get(Uri.parse("https://webappoo9.onrender.com/myusers"), headers: {
+      'Content-Type': 'application/json',
+      'authorization': '${token}'
+    });
+    if (response.statusCode == 200) {
+      var responseObject = jsonDecode(response.body);
+      UserModel userModel = UserModel.fromMap(responseObject);
+      print(userModel);
+      return userModel;
+    }
+    return null;
   }
 
   static Future<void> signOut() async {
