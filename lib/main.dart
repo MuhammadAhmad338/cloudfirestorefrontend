@@ -38,11 +38,11 @@ class _MyAppState extends State<MyApp> {
     setState(() {
       signedToken = prefs.getString('token');
     });
-    print(signedToken);
   }
 
   @override
   void initState() {
+    // Ahmad
     // TODO: implement initState
     super.initState();
     getData();

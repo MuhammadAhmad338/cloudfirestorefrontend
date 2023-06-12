@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:googlecloud/Services/dataServices.dart';
 import 'package:googlecloud/Views/homeView.dart';
 
+import 'allUsers.dart';
+
 class AllDogs extends StatefulWidget {
   final String? token;
   const AllDogs({super.key, this.token});
@@ -33,42 +35,42 @@ class _AllDogsState extends State<AllDogs> {
         ],
         centerTitle: true,
       ),
-      drawer:  Drawer(
-            backgroundColor: const Color.fromARGB(255, 248, 228, 191),
-            child: ListView(
-                  children: [
-                   FutureBuilder(
-                     future: DataServices().myUsers(widget.token),
-                     builder: (context, snapshot) {
-                      var user = snapshot.data;
-                       if (user == null) {
-                          return const DrawerHeader(child: Text('Username Email'));  
-                       } 
-                       return DrawerHeader(child: Text("${user.username} ${user.email}"));
-                     }
-                   ),
-                    ListTile(
-                      title: const Text('Home'),
-                      onTap: () {
-                        Navigator.pop(context);
-                      },
-                    ),
-                    ListTile(
-                      title: const Text('About'),
-                      onTap: () {
-                        Navigator.pushNamed(context, '/about');
-                      },
-                    ),
-                    ListTile(
-                      title: const Text(
-                        'LogOut',
-                        style: TextStyle(fontWeight: FontWeight.bold),
-                      ),
-                      onTap: () {
-                        DataServices.signOut();
-                      },
-                    ),
-                  ],
+      drawer: Drawer(
+          backgroundColor: const Color.fromARGB(255, 248, 228, 191),
+          child: ListView(
+            children: [
+              FutureBuilder(
+                  future: DataServices().myUsers(widget.token),
+                  builder: (context, snapshot) {
+                    var user = snapshot.data;
+                    if (user == null) {
+                      return const DrawerHeader(child: Text('Username Email'));
+                    }
+                    return DrawerHeader(
+                        child: Text("${user.username} ${user.email}"));
+                  }),
+              ListTile(
+                title: const Text('Home'),
+                onTap: () {
+                  Navigator.pop(context);
+                },
+              ),
+              ListTile(
+                title: const Text('About'),
+                onTap: () {
+                  Navigator.of(context).push(MaterialPageRoute(builder: (_) => AllUsers(token: widget.token)));
+                },
+              ),
+              ListTile(
+                title: const Text(
+                  'LogOut',
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
+                onTap: () {
+                  DataServices.signOut();
+                },
+              ),
+            ],
           )),
       body: SafeArea(
         child: FutureBuilder(

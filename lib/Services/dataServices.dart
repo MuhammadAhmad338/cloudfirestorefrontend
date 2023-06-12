@@ -77,15 +77,13 @@ class DataServices extends ChangeNotifier {
         Uri.parse("https://webappoo9.onrender.com/signUp"),
         headers: <String, String>{"Content-Type": "application/json"},
         body: userdata.toJson());
-    print(response);
     if (response.statusCode == 200) {
       var responseObject = jsonDecode(response.body);
-      print(responseObject);
+
       SharedPreferences _sharedPreferences =
           await SharedPreferences.getInstance();
       _sharedPreferences.setString("token", responseObject["token"]);
 
-      print("UserData posted successfully! ${response}");
       Navigator.of(context).push(MaterialPageRoute(
           builder: (context) => AllDogs(
                 token: token,
@@ -101,14 +99,14 @@ class DataServices extends ChangeNotifier {
         Uri.parse("https://webappoo9.onrender.com/signIn"),
         headers: <String, String>{"Content-Type": "application/json"},
         body: userdata.toJson());
-    print(response);
+
     if (response.statusCode == 200) {
       var responseObject = jsonDecode(response.body);
 
       SharedPreferences _sharedPreferences =
           await SharedPreferences.getInstance();
       _sharedPreferences.setString("token", responseObject["token"]);
-      print("UserData posted successfully!");
+
       Navigator.of(context).push(MaterialPageRoute(
           builder: (context) => AllDogs(
                 token: token,
@@ -127,8 +125,23 @@ class DataServices extends ChangeNotifier {
     if (response.statusCode == 200) {
       var responseObject = jsonDecode(response.body);
       UserModel userModel = UserModel.fromMap(responseObject);
-      print(userModel);
+
       return userModel;
+    }
+    return null;
+  }
+
+  Future<List<UserModel>?> alltheUsers(String? token) async {
+    var response = await http
+        .get(Uri.parse("https://webappoo9.onrender.com/alltheUsers"), headers: {
+      'Content-Type': 'application/json',
+      'authorization': '${token}'
+    });
+    if (response.statusCode == 200) {
+      List<dynamic> users = jsonDecode(response.body);
+     var usersData =
+          users.map((usersData) => UserModel.fromMap(usersData)).toList();
+      return usersData;
     }
     return null;
   }
@@ -137,6 +150,5 @@ class DataServices extends ChangeNotifier {
     SharedPreferences _sharedPreferences =
         await SharedPreferences.getInstance();
     _sharedPreferences.remove("token");
-    print("User is SignedOut");
   }
 }
