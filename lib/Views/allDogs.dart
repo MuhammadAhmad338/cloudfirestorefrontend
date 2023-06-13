@@ -1,8 +1,10 @@
-// ignore: file_names
+// ignore_for_file: file_names
 import 'package:flutter/material.dart';
 import 'package:googlecloud/Services/dataServices.dart';
+import 'package:googlecloud/Services/imageServices.dart';
 import 'package:googlecloud/Views/homeView.dart';
-
+import 'package:image_picker/image_picker.dart';
+import 'package:provider/provider.dart';
 import 'allUsers.dart';
 
 class AllDogs extends StatefulWidget {
@@ -16,6 +18,8 @@ class AllDogs extends StatefulWidget {
 class _AllDogsState extends State<AllDogs> {
   @override
   Widget build(BuildContext context) {
+    var imageProvider = Provider.of<ImageServices>(context, listen: false);
+
     return Scaffold(
       appBar: AppBar(
         elevation: 1,
@@ -44,10 +48,67 @@ class _AllDogsState extends State<AllDogs> {
                   builder: (context, snapshot) {
                     var user = snapshot.data;
                     if (user == null) {
-                      return const DrawerHeader(child: Text('Username Email'));
+                      return DrawerHeader(
+                          child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          imageProvider.image != null
+                              ? Stack(
+                                  children: [
+                                    CircleAvatar(
+                                        backgroundImage:
+                                            FileImage(imageProvider.image!),
+                                        radius: 36,
+                                        backgroundColor: const Color.fromARGB(
+                                            255, 252, 96, 148)),
+                                    GestureDetector(
+                                      onTap: () {
+                                        imageProvider.pickImage( ImageSource.camera, context);
+                                      },
+                                      child: const Positioned(
+                                        bottom: 0.80,
+                                        left: 1.0,
+                                        child: Icon(
+                                          Icons.camera_alt,
+                                          size: 25.0,
+                                          color: Colors.black,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                )
+                              : Stack(
+                                  children: [
+                                    const CircleAvatar(
+                                      backgroundImage:
+                                          AssetImage("assets/images/user.png"),
+                                      radius: 36,
+                                      backgroundColor:
+                                          Color.fromARGB(255, 252, 96, 148),
+                                    ),
+                                    GestureDetector(
+                                      onTap: () {
+                                        imageProvider.pickImage(ImageSource.camera, context);
+                                      },
+                                      child: const Positioned(
+                                        bottom: 0.50,
+                                        left: 1.0,
+                                        child: Icon(
+                                          Icons.add,
+                                          size: 25.0,
+                                          color: Colors.white,
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                          const Text('Username Email',
+                              style: TextStyle(fontWeight: FontWeight.bold))
+                        ],
+                      ));
                     }
-                    return DrawerHeader(
-                        child: Text("${user.username} ${user.email}"));
+                    return Text("${user.username} ${user.email}",
+                        style: const TextStyle(fontWeight: FontWeight.bold));
                   }),
               ListTile(
                 title: const Text('Home'),
@@ -109,6 +170,13 @@ class _AllDogsState extends State<AllDogs> {
                 );
               }
             }),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          imageProvider.pickImage(ImageSource.gallery, context);
+        },
+        tooltip: 'Pick Image',
+        child: const Icon(Icons.add),
       ),
     );
   }
