@@ -112,9 +112,39 @@ class DataServices extends ChangeNotifier {
                 token: token,
               )));
     } else {
-      print("Request failed with status!");
+      ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: const Text('Invalid Credentials'),
+                action: SnackBarAction(
+                  label: 'Undo',
+                  onPressed: () {},
+                ),
+              ),
+            ); 
     }
   }
+
+  Future<void> forgetPassword(UserModel userModel,BuildContext context) async {
+    var response = await http.post(
+        Uri.parse("https://webappoo9.onrender.com/forgetpassword"),
+        headers: {
+          'Content-Type': 'application/json',
+        }, body: userModel.toJson());
+    if (response.statusCode == 200) {
+      var responseObject = jsonDecode(response.body);
+     ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text('${responseObject["status"]}'),
+                action: SnackBarAction(
+                  label: 'Undo',
+                  onPressed: () {},
+                ),
+              ),
+            ); 
+    }
+     
+  }
+
 
   Future<UserModel?> myUsers(String? token) async {
     var response = await http
@@ -139,7 +169,7 @@ class DataServices extends ChangeNotifier {
     });
     if (response.statusCode == 200) {
       List<dynamic> users = jsonDecode(response.body);
-     var usersData =
+      var usersData =
           users.map((usersData) => UserModel.fromMap(usersData)).toList();
       return usersData;
     }

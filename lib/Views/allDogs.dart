@@ -19,6 +19,7 @@ class _AllDogsState extends State<AllDogs> {
     return Scaffold(
       appBar: AppBar(
         elevation: 1,
+        centerTitle: true,
         backgroundColor: const Color.fromARGB(255, 248, 228, 191),
         title: const Text(
           "All Dogs",
@@ -33,7 +34,6 @@ class _AllDogsState extends State<AllDogs> {
             icon: const Icon(Icons.add),
           )
         ],
-        centerTitle: true,
       ),
       drawer: Drawer(
           backgroundColor: const Color.fromARGB(255, 248, 228, 191),
@@ -58,7 +58,8 @@ class _AllDogsState extends State<AllDogs> {
               ListTile(
                 title: const Text('About'),
                 onTap: () {
-                  Navigator.of(context).push(MaterialPageRoute(builder: (_) => AllUsers(token: widget.token)));
+                  Navigator.of(context).push(MaterialPageRoute(
+                      builder: (_) => AllUsers(token: widget.token)));
                 },
               ),
               ListTile(
@@ -77,35 +78,36 @@ class _AllDogsState extends State<AllDogs> {
             future: DataServices.gotAllDogs(),
             builder: (context, snapshot) {
               var dogs = snapshot.data;
-              if (snapshot.hasError) {
-                return Center(
-                    child: Text(
-                        "Some error occured ${snapshot.error.toString()}"));
-              } else if (snapshot.data!.isEmpty) {
-                return const Center(child: Text("List is Empty!"));
-              } else if (snapshot.hasData) {
-                return ListView.builder(
-                    itemCount: dogs!.length,
-                    itemBuilder: (context, index) {
-                      var dog = dogs[index];
-                      return Card(
-                        child: ListTile(
-                          title: Text(dog.name),
-                          subtitle: Text(dog.origin),
-                          trailing: Text(dog.lifeExpectancy.toString()),
-                          onTap: () {
-                            DataServices.deleteDogData(dog.id);
-                            setState(() {});
-                          },
-                        ),
-                      );
-                    });
+              if (snapshot.connectionState == ConnectionState.done) {
+                if (snapshot.hasData) {
+                  return ListView.builder(
+                      itemCount: dogs!.length,
+                      itemBuilder: (context, index) {
+                        var dog = dogs[index];
+                        return Card(
+                          child: ListTile(
+                            title: Text(dog.name),
+                            subtitle: Text(dog.origin),
+                            trailing: Text(dog.lifeExpectancy.toString()),
+                            onTap: () {
+                              DataServices.deleteDogData(dog.id);
+                              setState(() {});
+                            },
+                          ),
+                        );
+                      });
+                } else {
+                  return const Center(
+                      child: Text("Error fetching data",
+                          style: TextStyle(fontWeight: FontWeight.bold)));
+                }
+              } else {
+                return const Center(
+                  child: CircularProgressIndicator(
+                    color: Colors.blue,
+                  ),
+                );
               }
-              return const Center(
-                child: CircularProgressIndicator(
-                  color: Colors.blue,
-                ),
-              );
             }),
       ),
     );

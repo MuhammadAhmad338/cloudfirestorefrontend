@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:googlecloud/Models/userModel.dart';
 import 'package:googlecloud/Services/dataServices.dart';
+import 'package:googlecloud/Views/forgetPassword.dart';
 
 class SignInScreen extends StatefulWidget {
   final String? token;
@@ -118,7 +119,18 @@ class _SignScreenState extends State<SignInScreen> {
                         fontWeight: FontWeight.bold,
                         fontSize: MediaQuery.of(context).size.width * 0.04,
                       )),
-                )
+                ),
+                 SizedBox(height: MediaQuery.of(context).size.width * 0.032),
+                 GestureDetector(
+                  onTap: () {
+                    Navigator.of(context).push(MaterialPageRoute(builder: (context) => const ForgetPassword()));
+                  },
+                  child: Text("Forget Password",
+                      style: TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: MediaQuery.of(context).size.width * 0.04,
+                      )),
+                ),
               ],
             ),
           ),

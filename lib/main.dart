@@ -58,6 +58,6 @@ class _MyAppState extends State<MyApp> {
             scaffoldBackgroundColor: const Color.fromARGB(255, 248, 228, 191),
             colorScheme: ColorScheme.fromSeed(seedColor: Colors.black),
             useMaterial3: true),
-        home: signedToken == null ? SignUpScreen(token: signedToken,) :  AllDogs(token: signedToken));
+        home: signedToken == null ? SignUpScreen(token: signedToken) :  AllDogs(token: signedToken));
   }
 }
