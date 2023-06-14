@@ -1,3 +1,4 @@
+// ignore_for_file: file_names, avoid_print
 import 'package:flutter/material.dart';
 import 'package:googlecloud/Models/userModel.dart';
 import 'package:googlecloud/Services/dataServices.dart';
@@ -12,9 +13,21 @@ class ForgetPassword extends StatefulWidget {
 }
 
 class _ForgetPasswordState extends State<ForgetPassword> {
+
   final TextEditingController controller = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
+  final TextEditingController confirmpasswordController = TextEditingController();
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  bool _isPasswordVisible = false;
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+    controller.dispose();
+    passwordController.dispose();
+    confirmpasswordController.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -30,7 +43,7 @@ class _ForgetPasswordState extends State<ForgetPassword> {
         body: Form(
           key: _formKey,
           child: Padding(
-            padding: const EdgeInsets.all(8.0),
+            padding: const EdgeInsets.all(24.0),
             child: Column(
               children: [
                 TextFormField(
@@ -39,7 +52,6 @@ class _ForgetPasswordState extends State<ForgetPassword> {
                     if (value!.isEmpty) {
                       return 'Please enter your Email';
                     }
-
                     // Email format validation using a regular expression
                     // You can modify the regular expression pattern as per your requirements
                     String emailRegex =
@@ -55,6 +67,19 @@ class _ForgetPasswordState extends State<ForgetPassword> {
                 ),
                 TextFormField(
                   controller: passwordController,
+                  obscureText: !_isPasswordVisible,
+                  decoration: InputDecoration(
+                      labelText: "Password",
+                      suffixIcon: IconButton(
+                        icon: _isPasswordVisible
+                            ? const Icon(Icons.visibility)
+                            : const Icon(Icons.visibility_off),
+                        onPressed: () {
+                          setState(() {
+                            _isPasswordVisible = !_isPasswordVisible;
+                          });
+                        },
+                      )),
                   validator: (value) {
                     if (value!.isEmpty) {
                       return 'Please enter your password';
@@ -68,19 +93,56 @@ class _ForgetPasswordState extends State<ForgetPassword> {
                       return 'It should contain at least 8 characters, including uppercase, lowercase, numeric, and special characters.';
                     }
                     return null;
-                  },
-                  decoration: const InputDecoration(labelText: "Password"),
+                  }
+                ),
+                TextFormField(
+                  controller: confirmpasswordController,
+                  obscureText: !_isPasswordVisible,
+                  decoration: InputDecoration(
+                      labelText: "Confirm Password",
+                      suffixIcon: IconButton(
+                        icon: _isPasswordVisible
+                            ? const Icon(Icons.visibility)
+                            : const Icon(Icons.visibility_off),
+                        onPressed: () {
+                          setState(() {
+                            _isPasswordVisible = !_isPasswordVisible;
+                          });
+                        },
+                      )),
+                  validator: (value) {
+                    if (value!.isEmpty) {
+                      return 'Please enter your password';
+                    }
+                    if (value != passwordController.text) {
+                      ScaffoldMessenger.of(context).showSnackBar( const SnackBar(
+                       content: Text("Password doesnot match"), 
+                      ));
+                    }
+                    // Password format validation using a regular expression
+                    // You can modify the regular expression pattern as per your requirements
+                    String passwordRegex =
+                        r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~]).{8,}$';
+                    RegExp regex = RegExp(passwordRegex);
+                    if (!regex.hasMatch(value)) {
+                      return 'It should contain at least 8 characters, including uppercase, lowercase, numeric, and special characters.';
+                    }
+                    return null;
+                  }
                 ),
                 SizedBox(height: MediaQuery.of(context).size.height * 0.02),
                 TextButton(
                     onPressed: () {
-                      DataServices().forgetPassword(
+                    if (_formKey.currentState!.validate()) {
+                        DataServices().forgetPassword(
                           UserModel(
                               email: controller.text,
                               password: passwordController.text),
                           context);
-                          controller.clear();
-                          passwordController.clear();
+                    }
+                    controller.clear();
+                    passwordController.clear();
+                    confirmpasswordController.clear();
                     },
                     child: const Text("Forget Password",
                         style: TextStyle(fontWeight: FontWeight.bold))),

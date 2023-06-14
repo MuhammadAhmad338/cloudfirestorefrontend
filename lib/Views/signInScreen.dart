@@ -13,9 +13,12 @@ class SignInScreen extends StatefulWidget {
 }
 
 class _SignScreenState extends State<SignInScreen> {
+  
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final TextEditingController usernameController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
+  bool _isPasswordVisible = false;
+
 
   @override
   void dispose() {
@@ -52,17 +55,30 @@ class _SignScreenState extends State<SignInScreen> {
                 ),
                 TextFormField(
                   controller: usernameController,
+                  decoration: const InputDecoration(labelText: "Username"),  
                   validator: (value) {
                     if (value!.isEmpty) {
                       return 'Please enter your Username';
                     }
                     return null;
                   },
-                  decoration: const InputDecoration(labelText: "Username"),
                 ),
                 SizedBox(height: MediaQuery.of(context).size.width * 0.016),
                 TextFormField(
                   controller: passwordController,
+                  obscureText: !_isPasswordVisible,
+                  decoration:  InputDecoration(labelText: "Password",
+                   suffixIcon:  IconButton(
+                        icon: _isPasswordVisible
+                            ? const Icon(Icons.visibility)
+                            : const Icon(Icons.visibility_off),
+                        onPressed: () {
+                          setState(() {
+                            _isPasswordVisible = !_isPasswordVisible;
+                          });
+                        },
+                      )
+                  ),
                   validator: (value) {
                     if (value!.isEmpty) {
                       return 'Please enter your Password';
@@ -77,7 +93,6 @@ class _SignScreenState extends State<SignInScreen> {
                     }
                     return null;
                   },
-                  decoration: const InputDecoration(labelText: "Password"),
                 ),
                 SizedBox(height: MediaQuery.of(context).size.width * 0.016),
                 TextButton(

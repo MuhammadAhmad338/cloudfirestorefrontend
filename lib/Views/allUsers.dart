@@ -16,6 +16,7 @@ class _AllUsersState extends State<AllUsers> {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
+         backgroundColor: const Color.fromARGB(255, 248, 228, 191),
         title: const Text("All Users",
             style: TextStyle(fontWeight: FontWeight.bold)),
       ),
@@ -23,7 +24,8 @@ class _AllUsersState extends State<AllUsers> {
           child: FutureBuilder<List<UserModel>?>(
               future: DataServices().alltheUsers(widget.token),
               builder: (context, snapshot) {
-                if (!snapshot.hasData) {
+                if (snapshot.connectionState == ConnectionState.done) {
+               if (!snapshot.hasData) {
                   return const Center(
                     child: Text("No users exists",
                         style: TextStyle(fontWeight: FontWeight.bold)),
@@ -40,6 +42,13 @@ class _AllUsersState extends State<AllUsers> {
                         ),
                       );
                     });
+                } else {
+                  return const Center(
+                    child: CircularProgressIndicator(
+                      color: Colors.blue,
+                    ),
+                  );
+                }
               })),
     );
   }

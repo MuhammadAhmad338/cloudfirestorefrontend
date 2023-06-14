@@ -17,6 +17,7 @@ class _SignUpScreenState extends State<SignUpScreen> {
   final TextEditingController usernameController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
+  bool _isPasswordVisible = false;
 
   @override
   void dispose() {
@@ -68,7 +69,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   if (value!.isEmpty) {
                     return 'Please enter your Email';
                   }
-
                   // Email format validation using a regular expression
                   // You can modify the regular expression pattern as per your requirements
                   String emailRegex =
@@ -77,7 +77,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
                   if (!regex.hasMatch(value)) {
                     return 'Please enter a valid email address';
                   }
-
                   return null;
                 },
                 decoration: const InputDecoration(labelText: "Email"),
@@ -85,6 +84,19 @@ class _SignUpScreenState extends State<SignUpScreen> {
               SizedBox(height: MediaQuery.of(context).size.width * 0.016),
               TextFormField(
                 controller: passwordController,
+                obscureText: !_isPasswordVisible,
+                decoration:  InputDecoration(labelText: "Password",
+                suffixIcon: IconButton(
+                    icon: _isPasswordVisible
+                            ? const Icon(Icons.visibility)
+                            : const Icon(Icons.visibility_off),
+                  onPressed: () {
+                      setState(() {
+                      _isPasswordVisible = !_isPasswordVisible;
+                      });
+                  },
+                )
+                ),
                 validator: (value) {
                   if (value!.isEmpty) {
                     return 'Please enter your Password';
@@ -100,7 +112,6 @@ class _SignUpScreenState extends State<SignUpScreen> {
 
                   return null;
                 },
-                decoration: const InputDecoration(labelText: "Password"),
               ),
               SizedBox(height: MediaQuery.of(context).size.width * 0.016),
               TextButton(

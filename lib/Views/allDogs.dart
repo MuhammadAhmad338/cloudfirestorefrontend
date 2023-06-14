@@ -18,7 +18,7 @@ class AllDogs extends StatefulWidget {
 class _AllDogsState extends State<AllDogs> {
   @override
   Widget build(BuildContext context) {
-    var imageProvider = Provider.of<ImageServices>(context, listen: false);
+    var imageProvider = Provider.of<ImageServices>(context);
 
     return Scaffold(
       appBar: AppBar(
@@ -33,7 +33,7 @@ class _AllDogsState extends State<AllDogs> {
           IconButton(
             onPressed: () {
               Navigator.of(context)
-                  .push(MaterialPageRoute(builder: (_) => const HomeView()));
+                  .push(MaterialPageRoute(builder: (_) =>  HomeView(token: widget.token!,)));
             },
             icon: const Icon(Icons.add),
           )
@@ -63,7 +63,100 @@ class _AllDogsState extends State<AllDogs> {
                                             255, 252, 96, 148)),
                                     GestureDetector(
                                       onTap: () {
-                                        imageProvider.pickImage( ImageSource.camera, context);
+                                        showDialog(
+                                            context: context,
+                                            builder: (BuildContext context) {
+                                              return AlertDialog(
+                                                actions: [
+                                                  Row(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .spaceBetween,
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .center,
+                                                    children: [
+                                                      GestureDetector(
+                                                        onTap: () {
+                                                          ImageServices()
+                                                              .pickImage(
+                                                                  ImageSource
+                                                                      .gallery,
+                                                                  context);
+                                                        },
+                                                        child: Container(
+                                                          margin:
+                                                              const EdgeInsets
+                                                                      .only(
+                                                                  top: 16.0),
+                                                          padding:
+                                                              const EdgeInsets
+                                                                  .all(16.0),
+                                                          child: Text("Gallery",
+                                                              style: TextStyle(
+                                                                  color: Colors
+                                                                      .black,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .bold)),
+                                                          decoration: BoxDecoration(
+                                                              color: const Color
+                                                                      .fromARGB(
+                                                                  255,
+                                                                  248,
+                                                                  228,
+                                                                  191),
+                                                              borderRadius:
+                                                                  BorderRadius
+                                                                      .circular(
+                                                                          16)),
+                                                        ),
+                                                      ),
+                                                      GestureDetector(
+                                                        onTap: () {
+                                                          ImageServices()
+                                                              .pickImage(
+                                                                  ImageSource
+                                                                      .camera,
+                                                                  context);
+                                                        },
+                                                        child: Container(
+                                                          margin:
+                                                              const EdgeInsets
+                                                                      .only(
+                                                                  top: 16.0),
+                                                          padding:
+                                                              const EdgeInsets
+                                                                  .all(16.0),
+                                                          child: const Text(
+                                                            "Camera",
+                                                            style: TextStyle(
+                                                                color: Colors
+                                                                    .black,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .bold),
+                                                          ),
+                                                          decoration:
+                                                              BoxDecoration(
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .circular(
+                                                                        16),
+                                                            color: const Color
+                                                                    .fromARGB(
+                                                                255,
+                                                                248,
+                                                                228,
+                                                                191),
+                                                          ),
+                                                        ),
+                                                      )
+                                                    ],
+                                                  )
+                                                ],
+                                              );
+                                            });
                                       },
                                       child: const Positioned(
                                         bottom: 0.80,
@@ -87,9 +180,7 @@ class _AllDogsState extends State<AllDogs> {
                                           Color.fromARGB(255, 252, 96, 148),
                                     ),
                                     GestureDetector(
-                                      onTap: () {
-                                        imageProvider.pickImage(ImageSource.camera, context);
-                                      },
+                                      onTap: () {},
                                       child: const Positioned(
                                         bottom: 0.50,
                                         left: 1.0,
@@ -107,8 +198,262 @@ class _AllDogsState extends State<AllDogs> {
                         ],
                       ));
                     }
-                    return Text("${user.username} ${user.email}",
-                        style: const TextStyle(fontWeight: FontWeight.bold));
+                    return DrawerHeader(
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            imageProvider.image != null
+                                ? Stack(
+                                    children: [
+                                      CircleAvatar(
+                                          backgroundImage:
+                                              FileImage(imageProvider.image!),
+                                          radius: 36,
+                                          backgroundColor: const Color.fromARGB(
+                                              255, 252, 96, 148)),
+                                      GestureDetector(
+                                        onTap: () {
+                                          showDialog(
+                                              context: context,
+                                              builder: (BuildContext context) {
+                                                return AlertDialog(
+                                                  actions: [
+                                                    Row(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .spaceBetween,
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .center,
+                                                      children: [
+                                                        GestureDetector(
+                                                          onTap: () {
+                                                            ImageServices()
+                                                                .pickImage(
+                                                                    ImageSource
+                                                                        .gallery,
+                                                                    context);
+                                                          },
+                                                          child: Container(
+                                                            margin:
+                                                                const EdgeInsets
+                                                                        .only(
+                                                                    top: 16.0),
+                                                            padding:
+                                                                const EdgeInsets
+                                                                    .all(16.0),
+                                                            child: Text(
+                                                                "Gallery",
+                                                                style: TextStyle(
+                                                                    color: Colors
+                                                                        .black,
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .bold)),
+                                                            decoration: BoxDecoration(
+                                                                color: const Color
+                                                                        .fromARGB(
+                                                                    255,
+                                                                    248,
+                                                                    228,
+                                                                    191),
+                                                                borderRadius:
+                                                                    BorderRadius
+                                                                        .circular(
+                                                                            16)),
+                                                          ),
+                                                        ),
+                                                        GestureDetector(
+                                                          onTap: () {
+                                                            ImageServices()
+                                                                .pickImage(
+                                                                    ImageSource
+                                                                        .camera,
+                                                                    context);
+                                                          },
+                                                          child: Container(
+                                                            margin:
+                                                                const EdgeInsets
+                                                                        .only(
+                                                                    top: 16.0),
+                                                            padding:
+                                                                const EdgeInsets
+                                                                    .all(16.0),
+                                                            child: const Text(
+                                                              "Camera",
+                                                              style: TextStyle(
+                                                                  color: Colors
+                                                                      .black,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .bold),
+                                                            ),
+                                                            decoration:
+                                                                BoxDecoration(
+                                                              borderRadius:
+                                                                  BorderRadius
+                                                                      .circular(
+                                                                          16),
+                                                              color: const Color
+                                                                      .fromARGB(
+                                                                  255,
+                                                                  248,
+                                                                  228,
+                                                                  191),
+                                                            ),
+                                                          ),
+                                                        )
+                                                      ],
+                                                    )
+                                                  ],
+                                                );
+                                              });
+                                        },
+                                        child: const Positioned(
+                                          bottom: 0.80,
+                                          left: 1.0,
+                                          child: Icon(
+                                            Icons.camera_alt,
+                                            size: 25.0,
+                                            color: Colors.black,
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  )
+                                : Stack(
+                                    children: [
+                                      const CircleAvatar(
+                                        backgroundImage: AssetImage(
+                                            "assets/images/user.png"),
+                                        radius: 36,
+                                        backgroundColor:
+                                            Color.fromARGB(255, 252, 96, 148),
+                                      ),
+                                      GestureDetector(
+                                        onTap: () {
+                                          showDialog(
+                                              context: context,
+                                              builder: (BuildContext context) {
+                                                return AlertDialog(
+                                                  actions: [
+                                                    Row(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .spaceBetween,
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .center,
+                                                      children: [
+                                                        GestureDetector(
+                                                          onTap: () {
+                                                            ImageServices()
+                                                                .pickImage(
+                                                                    ImageSource
+                                                                        .gallery,
+                                                                    context);
+                                                          },
+                                                          child: Container(
+                                                            margin:
+                                                                const EdgeInsets
+                                                                        .only(
+                                                                    top: 16.0),
+                                                            padding:
+                                                                const EdgeInsets
+                                                                    .all(16.0),
+                                                            child: Text(
+                                                                "Gallery",
+                                                                style: TextStyle(
+                                                                    color: Colors
+                                                                        .black,
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .bold)),
+                                                            decoration: BoxDecoration(
+                                                                color: const Color
+                                                                        .fromARGB(
+                                                                    255,
+                                                                    248,
+                                                                    228,
+                                                                    191),
+                                                                borderRadius:
+                                                                    BorderRadius
+                                                                        .circular(
+                                                                            16)),
+                                                          ),
+                                                        ),
+                                                        GestureDetector(
+                                                          onTap: () {
+                                                            ImageServices()
+                                                                .pickImage(
+                                                                    ImageSource
+                                                                        .camera,
+                                                                    context);
+                                                          },
+                                                          child: Container(
+                                                            margin:
+                                                                const EdgeInsets
+                                                                        .only(
+                                                                    top: 16.0),
+                                                            padding:
+                                                                const EdgeInsets
+                                                                    .all(16.0),
+                                                            child: const Text(
+                                                              "Camera",
+                                                              style: TextStyle(
+                                                                  color: Colors
+                                                                      .black,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .bold),
+                                                            ),
+                                                            decoration:
+                                                                BoxDecoration(
+                                                              borderRadius:
+                                                                  BorderRadius
+                                                                      .circular(
+                                                                          16),
+                                                              color: const Color
+                                                                      .fromARGB(
+                                                                  255,
+                                                                  248,
+                                                                  228,
+                                                                  191),
+                                                            ),
+                                                          ),
+                                                        )
+                                                      ],
+                                                    )
+                                                  ],
+                                                );
+                                              });
+                                        },
+                                        child: const Positioned(
+                                          bottom: 0.50,
+                                          left: 1.0,
+                                          child: Icon(
+                                            Icons.add,
+                                            size: 25.0,
+                                            color: Colors.white,
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                            Text("${user.username}",
+                                style: const TextStyle(
+                                    fontWeight: FontWeight.bold)),
+                            Text(
+                              "${user.email}",
+                              style:
+                                  const TextStyle(fontWeight: FontWeight.bold),
+                            )
+                          ],
+                        ),
+                      ),
+                    );
                   }),
               ListTile(
                 title: const Text('Home'),
@@ -173,7 +518,7 @@ class _AllDogsState extends State<AllDogs> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          imageProvider.pickImage(ImageSource.gallery, context);
+          imageProvider.pickImage(ImageSource.camera, context);
         },
         tooltip: 'Pick Image',
         child: const Icon(Icons.add),
