@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:googlecloud/Services/dataServices.dart';
 import 'package:googlecloud/Services/imageServices.dart';
 import 'package:googlecloud/Views/homeView.dart';
+import 'package:googlecloud/Views/multipleImages.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import 'allUsers.dart';
@@ -458,7 +459,7 @@ class _AllDogsState extends State<AllDogs> {
               ListTile(
                 title: const Text('Home'),
                 onTap: () {
-                  Navigator.pop(context);
+                  Navigator.of(context).push(MaterialPageRoute(builder: (_) => const MultipleImages()));
                 },
               ),
               ListTile(
@@ -515,13 +516,6 @@ class _AllDogsState extends State<AllDogs> {
                 );
               }
             }),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          imageProvider.pickImage(ImageSource.camera, context);
-        },
-        tooltip: 'Pick Image',
-        child: const Icon(Icons.add),
       ),
     );
   }
